@@ -1,0 +1,31 @@
+# Dependencies
+node_modules/
+frontend/node_modules/
+venv/
+.venv/
+
+# Environment Variables
+.env
+.env.local
+
+# Build output
+frontend/dist/
+frontend/build/
+
+# Python cache & bytecode
+__pycache__/
+*.pyc
+*.pyo
+*.pyd
+.pytest_cache/
+
+# Databases & local files
+*.db
+backend/powerpredict.db
+backend/*.db
+
+# IDE & OS files
+.DS_Store
+Thumbs.db
+.vscode/
+.idea/

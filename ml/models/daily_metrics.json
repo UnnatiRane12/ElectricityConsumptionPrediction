@@ -1,0 +1,21 @@
+{
+  "model_name": "XGBoost Regressor (XGBRegressor)",
+  "rmse": 2.0753,
+  "mae": 1.6286,
+  "r2": 0.9663,
+  "feature_importances": {
+    "Month": 0.0012796645751222968,
+    "DayOfWeek": 0.001666554599069059,
+    "IsHoliday": 0.015719477087259293,
+    "Temperature": 0.02288872003555298,
+    "Humidity": 0.0021462328732013702,
+    "SquareFootArea": 0.4954227805137634,
+    "Occupancy": 0.187162846326828,
+    "HVACUsage": 0.10653617233037949,
+    "LightingUsage": 0.014480858109891415,
+    "RenewableEnergy": 0.005876115523278713,
+    "SqFtPerPerson": 0.12380572408437729,
+    "CoolingDegreeDays": 0.018871136009693146,
+    "RenewableOffset": 0.004143707919865847
+  }
+}
