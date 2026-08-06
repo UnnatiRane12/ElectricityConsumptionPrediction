@@ -15,3 +15,5 @@ pytest>=7.4.0
 httpx>=0.24.0
 python-dotenv>=1.0.0
 starlette>=0.40.0
+xgboost>=1.7.0
+
