@@ -1,33 +1,40 @@
 import os
-from sqlalchemy import create_engine
+from dotenv import load_dotenv
+from sqlalchemy import create_engine, text
 from sqlalchemy.orm import sessionmaker, declarative_base
 
-POSTGRES_USER = os.getenv("POSTGRES_USER", "postgres")
-POSTGRES_PASSWORD = os.getenv("POSTGRES_PASSWORD", "postgres")
-POSTGRES_HOST = os.getenv("POSTGRES_HOST", "localhost")
-POSTGRES_PORT = os.getenv("POSTGRES_PORT", "5432")
-POSTGRES_DB = os.getenv("POSTGRES_DB", "powerpredict_db")
+# Load environment variables from .env file
+load_dotenv()
 
-DEFAULT_DATABASE_URL = f"postgresql://{POSTGRES_USER}:{POSTGRES_PASSWORD}@{POSTGRES_HOST}:{POSTGRES_PORT}/{POSTGRES_DB}"
-DATABASE_URL = os.getenv("DATABASE_URL", DEFAULT_DATABASE_URL)
+DATABASE_URL = os.getenv("DATABASE_URL")
 
-SQLITE_URL = "sqlite:///./powerpredict.db"
+if not DATABASE_URL:
+    raise RuntimeError("DATABASE_URL is not set. Please add it to your .env file.")
 
-engine = None
+# Try Supabase/PostgreSQL first, fall back to local SQLite if connection fails
 try:
-    if "postgresql" in DATABASE_URL:
-        # Test postgres engine
-        temp_engine = create_engine(DATABASE_URL, connect_args={"connect_timeout": 3})
-        with temp_engine.connect() as conn:
-            pass
-        engine = temp_engine
-        print(f"Connected to PostgreSQL database: {POSTGRES_DB}")
+    if DATABASE_URL.startswith("sqlite"):
+        engine = create_engine(DATABASE_URL, connect_args={"check_same_thread": False})
+    else:
+        engine = create_engine(
+            DATABASE_URL,
+            connect_args={"sslmode": "require"},
+            pool_pre_ping=True,
+            pool_size=5,
+            max_overflow=10,
+            echo=False
+        )
+        with engine.connect() as conn:
+            conn.execute(text("SELECT 1"))
+        print("[OK] Connected to Supabase PostgreSQL successfully!")
 except Exception as e:
-    print(f"PostgreSQL connection failed ({e}). Falling back to SQLite database at {SQLITE_URL}")
-
-if engine is None:
-    engine = create_engine(SQLITE_URL, connect_args={"check_same_thread": False})
-    print(f"Connected to SQLite database: {SQLITE_URL}")
+    print(f"[WARNING] Supabase connection failed. Falling back to local SQLite database.")
+    db_path = os.path.abspath(os.path.join(os.path.dirname(__file__), "../powerpredict.db"))
+    DATABASE_URL = f"sqlite:///{db_path}"
+    engine = create_engine(
+        DATABASE_URL,
+        connect_args={"check_same_thread": False}
+    )
 
 SessionLocal = sessionmaker(autocommit=False, autoflush=False, bind=engine)
 Base = declarative_base()

@@ -28,7 +28,7 @@ def register(user_data: UserRegister, db: Session = Depends(get_db)):
     db.refresh(new_user)
     
     access_token = create_access_token(data={"sub": new_user.email})
-    return TokenResponse(access_token=access_token, user=UserResponse.from_orm(new_user))
+    return TokenResponse(access_token=access_token, user=UserResponse.model_validate(new_user))
 
 @router.post("/login", response_model=TokenResponse)
 def login(credentials: UserLogin, db: Session = Depends(get_db)):
@@ -40,8 +40,8 @@ def login(credentials: UserLogin, db: Session = Depends(get_db)):
         )
         
     access_token = create_access_token(data={"sub": user.email})
-    return TokenResponse(access_token=access_token, user=UserResponse.from_orm(user))
+    return TokenResponse(access_token=access_token, user=UserResponse.model_validate(user))
 
 @router.get("/me", response_model=UserResponse)
 def get_me(current_user: User = Depends(get_current_user)):
-    return UserResponse.from_orm(current_user)
+    return UserResponse.model_validate(current_user)

@@ -18,7 +18,7 @@ def get_bill_by_prediction(
     if not bill:
         raise HTTPException(status_code=404, detail="Bill not found for this prediction.")
     
-    resp = BillResponse.from_orm(bill)
+    resp = BillResponse.model_validate(bill)
     resp.customer_name = current_user.full_name
     return resp
 

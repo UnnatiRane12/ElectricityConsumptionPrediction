@@ -27,5 +27,5 @@ def get_admin_dashboard(
         total_predictions=total_predictions,
         total_bills_amount=round(float(total_bills_amount), 2),
         category_distribution=category_distribution,
-        recent_users=[UserResponse.from_orm(u) for u in recent_users]
+        recent_users=[UserResponse.model_validate(u) for u in recent_users]
     )

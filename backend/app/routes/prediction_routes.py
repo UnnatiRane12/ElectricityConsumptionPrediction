@@ -61,7 +61,7 @@ def predict_daily_endpoint(
     db.add(bill_record)
     db.commit()
     
-    response = PredictionResponse.from_orm(prediction_record)
+    response = PredictionResponse.model_validate(prediction_record)
     response.insights = result['insights']
     response.bill_info = result['bill_info']
     return response
@@ -111,7 +111,7 @@ def predict_monthly_endpoint(
     db.add(bill_record)
     db.commit()
     
-    response = PredictionResponse.from_orm(prediction_record)
+    response = PredictionResponse.model_validate(prediction_record)
     response.insights = result['insights']
     response.bill_info = result['bill_info']
     return response
@@ -142,7 +142,7 @@ def get_prediction_history(
             if search_lower in p.category.lower() or search_lower in p.prediction_type.lower() or search_lower in str(p.predicted_kwh)
         ]
         
-    return [PredictionResponse.from_orm(p) for p in predictions]
+    return [PredictionResponse.model_validate(p) for p in predictions]
 
 @router.delete("/history/{prediction_id}")
 def delete_prediction(
