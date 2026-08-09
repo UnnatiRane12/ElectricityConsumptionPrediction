@@ -39,6 +39,8 @@ def login(credentials: UserLogin, db: Session = Depends(get_db)):
             status_code=status.HTTP_401_UNAUTHORIZED,
             detail="Invalid email or password."
         )
+    access_token = create_access_token(data={"sub": user.email})
+    return TokenResponse(access_token=access_token, user=UserResponse.model_validate(user))
 
 @router.post("/token")
 def token(
