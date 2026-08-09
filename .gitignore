@@ -29,7 +29,3 @@ backend/powerpredict.db
 Thumbs.db
 .vscode/
 .idea/
-
-# Temp / Debug scripts
-backend/fix_password.py
-backend/0.40.0
