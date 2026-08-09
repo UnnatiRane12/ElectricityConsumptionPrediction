@@ -28,13 +28,8 @@ try:
             conn.execute(text("SELECT 1"))
         print("[OK] Connected to Supabase PostgreSQL successfully!")
 except Exception as e:
-    print(f"[WARNING] Supabase connection failed. Falling back to local SQLite database.")
-    db_path = os.path.abspath(os.path.join(os.path.dirname(__file__), "../powerpredict.db"))
-    DATABASE_URL = f"sqlite:///{db_path}"
-    engine = create_engine(
-        DATABASE_URL,
-        connect_args={"check_same_thread": False}
-    )
+    print(f"[ERROR] Supabase connetion failed : {e}")
+    raise
 
 SessionLocal = sessionmaker(autocommit=False, autoflush=False, bind=engine)
 Base = declarative_base()

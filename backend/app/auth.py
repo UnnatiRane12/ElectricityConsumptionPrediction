@@ -13,7 +13,7 @@ SECRET_KEY = os.getenv("SECRET_KEY", "powerpredict_super_secret_jwt_key_2026_ene
 ALGORITHM = "HS256"
 ACCESS_TOKEN_EXPIRE_MINUTES = 60 * 24 * 7 # 7 days expiration
 
-oauth2_scheme = OAuth2PasswordBearer(tokenUrl="/api/auth/login")
+oauth2_scheme = OAuth2PasswordBearer(tokenUrl="/api/auth/token")
 
 def get_password_hash(password: str) -> str:
     salt = hashlib.sha256(SECRET_KEY.encode()).digest()[:16]
